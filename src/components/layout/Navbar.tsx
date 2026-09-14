@@ -40,7 +40,7 @@ export function Navbar() {
                     aria-current={isActive ? "true" : undefined}
                     className={[
                       "px-3 py-2 text-[13px] font-semibold uppercase tracking-wide transition-colors",
-                      "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E85D25]",
+                      "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E85D25]",
                       isActive
                         ? "rounded-sm border border-[#0A2647] text-[#0A2647]"
                         : "text-[#3D4451] hover:text-[#0A2647]",
@@ -51,7 +51,7 @@ export function Navbar() {
                   {index < navItems.length - 1 && (
                     <span
                       aria-hidden="true"
-                      className="mx-1 h-4 w-px rotate-[20deg] bg-[#D8D5CB]"
+                      className="mx-1 h-4 w-px rotate-20 bg-[#D8D5CB]"
                     />
                   )}
                 </li>
@@ -71,17 +71,17 @@ export function Navbar() {
           <span className="relative block h-4 w-5">
             <span
               className={`absolute left-0 top-0 h-0.5 w-5 bg-[#0A2647] transition-transform ${
-                isOpen ? "translate-y-[7px] rotate-45" : ""
+                isOpen ? "translate-y-1.75 rotate-45" : ""
               }`}
             />
             <span
-              className={`absolute left-0 top-[7px] h-0.5 w-5 bg-[#0A2647] transition-opacity ${
+              className={`absolute left-0 top-1.75 h-0.5 w-5 bg-[#0A2647] transition-opacity ${
                 isOpen ? "opacity-0" : ""
               }`}
             />
             <span
-              className={`absolute left-0 top-[14px] h-0.5 w-5 bg-[#0A2647] transition-transform ${
-                isOpen ? "-translate-y-[7px] -rotate-45" : ""
+              className={`absolute left-0 top-3.5 h-0.5 w-5 bg-[#0A2647] transition-transform ${
+                isOpen ? "-translate-y-1.75 -rotate-45" : ""
               }`}
             />
           </span>
