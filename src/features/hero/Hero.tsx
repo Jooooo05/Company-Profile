@@ -1,13 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
-import { heroContent, heroPartners } from "./hero.data";
+import { heroContent, heroPartners, heroServices } from "./hero.data";
 
 export function Hero() {
   return (
     <section
       id="hero"
-      className="relative isolate flex h-screen flex-col overflow-hidden bg-[#0A2647]"
+      className="relative isolate flex h-screen flex-col  bg-[#0A2647]"
     >
       <Image
         src={heroContent.backgroundImage.src}
@@ -66,8 +66,30 @@ export function Hero() {
       </div>
 
       {/* Card Service */}
-      <div className="w-4/5 bg-white shadow ">
-            
+      <div className="relative z-20 px-4 sm:px-6 lg:px-8">
+            <Container>
+              <div className="translate-y-1/3 rounded-sm bg-white shadow-xl">
+                <div className="grid grid-cols-1 md:grid-cols-3">
+                  {heroServices.map((service) => (
+                    <div key={service.title} className="flex flex-col gap-3 px-7 py-4 border-b md:border-b-0 md:border-r border-gray-200 last:border-r-0 md:my-5">
+                      <div className="flex items-center gap-4">                        
+                        <service.icon
+                          className="h-8 w-8 text-[#C7784A]"
+                          strokeWidth={1.5}
+                          aria-hidden="true"
+                        />
+                        <h3 className="text-base font-bold leading-snug text-[#0A2647]">
+                          {service.title}
+                        </h3>
+                      </div>
+                      <p className="text-sm leading-6 text-[#6B7280]">
+                        {service.description}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </Container>
       </div>
     </section>
   );
