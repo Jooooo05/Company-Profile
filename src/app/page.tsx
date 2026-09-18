@@ -4,10 +4,11 @@ import { About } from "@/features/about/About";
 import { Offer } from "@/features/our-offer/Offer";
 import { Team } from "@/features/team/Team";
 import { Contact } from "@/features/contact/Contact";
+import { Ports } from "@/features/ports/Port";
 
 export default function Home() {
   return (
-    <main className="flex flex-1 flex-col pb-20">
+    <main className="flex flex-1 flex-col">
 
       <Hero />
       <Service />
@@ -15,9 +16,9 @@ export default function Home() {
       <Offer />
       <Team />
       <Contact />
+      <Ports />
       {/* Sections akan ditambahkan di sini satu per satu:
           <Certificates />
-          <Ports />
       */}
     </main>
   );
