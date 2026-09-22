@@ -40,7 +40,7 @@ export function Offer() {
                 {item.title}
               </h3>
               <Link
-                href={item.href}
+                href={`/offer/${item.slug}`}
                 className="mt-2 inline-flex items-center gap-1.5 text-xs font-medium text-[#2B2B2B]/80 transition-colors hover:text-[#C7A059] focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#E85D25]"
               >
                 <CornerDownRight className="h-3.5 w-3.5" aria-hidden="true" />
