@@ -3,18 +3,39 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import {
+  motion,
+  AnimatePresence,
+  useScroll,
+  useMotionValueEvent,
+} from "motion/react";
 import { navItems, siteConfig } from "@/config/site";
 import { useActiveSection } from "@/hooks/useActiveSection";
 import { Container } from "@/components/ui/Container";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
   const pathname = usePathname();
+  const { scrollY } = useScroll();
 
   const anchorIds = navItems
     .filter((item) => item.type === "anchor")
     .map((item) => item.id);
   const activeId = useActiveSection(anchorIds);
+
+  useMotionValueEvent(scrollY, "change", (latest) => {
+    // Selalu tampil kalau menu mobile lagi kebuka, atau masih dekat atas halaman
+    if (isOpen || latest < 100) {
+      setIsVisible(true);
+    } else if (latest > lastScrollY) {
+      setIsVisible(false); // scroll ke bawah -> sembunyikan
+    } else {
+      setIsVisible(true); // scroll ke atas -> tampilkan
+    }
+    setLastScrollY(latest);
+  });
 
   function getHref(item: (typeof navItems)[number]) {
     if (item.type === "page") return item.href;
@@ -27,7 +48,11 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#E4E1D8] bg-[#FAFAF8]/95 backdrop-blur">
+    <motion.header
+      animate={{ y: isVisible ? 0 : -100 }}
+      transition={{ duration: 0.3, ease: "easeInOut" }}
+      className="sticky top-0 z-[110] border-b border-[#E4E1D8] bg-[#FAFAF8]/95 backdrop-blur"
+    >
       <Container className="flex h-20 items-center justify-between gap-6">
         {/* Logo */}
         <Link href="/" className="flex shrink-0 items-center gap-3">
@@ -57,14 +82,21 @@ export function Navbar() {
                     href={href}
                     aria-current={isActive ? "true" : undefined}
                     className={[
-                      "px-3 py-2 text-[13px] font-semibold uppercase tracking-wide transition-colors",
+                      "relative px-3 py-2 text-[13px] font-semibold uppercase tracking-wide transition-colors",
                       "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#E85D25]",
                       isActive
-                        ? "rounded-sm border border-[#0A2647] text-[#0A2647]"
+                        ? "text-[#0A2647]"
                         : "text-[#3D4451] hover:text-[#0A2647]",
                     ].join(" ")}
                   >
-                    {item.label}
+                    {isActive && (
+                      <motion.span
+                        layoutId="nav-active-pill"
+                        className="absolute inset-0 rounded-sm border border-[#0A2647]"
+                        transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                      />
+                    )}
+                    <span className="relative z-10">{item.label}</span>
                   </a>
                   {index < navItems.length - 1 && (
                     <span
@@ -107,23 +139,32 @@ export function Navbar() {
       </Container>
 
       {/* Mobile nav */}
-      {isOpen && (
-        <nav className="border-t border-[#E4E1D8] bg-[#FAFAF8] lg:hidden" aria-label="Mobile navigation">
-          <ul className="flex flex-col p-4">
-            {navItems.map((item) => (
-              <li key={item.label}>
-                <a
-                  href={getHref(item)}
-                  onClick={() => setIsOpen(false)}
-                  className="block border-b border-[#E4E1D8] py-3 text-sm font-semibold uppercase tracking-wide text-[#3D4451] last:border-none"
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      )}
-    </header>
+      <AnimatePresence>
+        {isOpen && (
+          <motion.nav
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.25, ease: "easeInOut" }}
+            className="overflow-hidden border-t border-[#E4E1D8] bg-[#FAFAF8] lg:hidden"
+            aria-label="Mobile navigation"
+          >
+            <ul className="flex flex-col p-4">
+              {navItems.map((item) => (
+                <li key={item.label}>
+                  <a
+                    href={getHref(item)}
+                    onClick={() => setIsOpen(false)}
+                    className="block border-b border-[#E4E1D8] py-3 text-sm font-semibold uppercase tracking-wide text-[#3D4451] last:border-none"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </motion.nav>
+        )}
+      </AnimatePresence>
+    </motion.header>
   );
 }
