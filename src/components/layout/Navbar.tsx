@@ -51,7 +51,7 @@ export function Navbar() {
     <motion.header
       animate={{ y: isVisible ? 0 : -100 }}
       transition={{ duration: 0.3, ease: "easeInOut" }}
-      className="sticky top-0 z-[110] border-b border-[#E4E1D8] bg-[#FAFAF8]/95 backdrop-blur"
+      className="sticky top-0 z-90 border-b border-[#E4E1D8] bg-[#FAFAF8]/95 backdrop-blur"
     >
       <Container className="flex h-20 items-center justify-between gap-6">
         {/* Logo */}

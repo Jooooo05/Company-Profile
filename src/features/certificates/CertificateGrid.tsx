@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { FileText } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
 import type { Certificate } from "./certificates.data";
 import { CertificateModal } from "./CertificateModal";
 
@@ -12,12 +13,19 @@ export function CertificateGrid({ certificates }: { certificates: Certificate[] 
   return (
     <>
       <ul className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {certificates.map((cert) => (
-          <li key={cert.id}>
-            <button
+        {certificates.map((cert, index) => (
+          <motion.li
+            key={cert.id}
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.4 }}
+            transition={{ duration: 0.4, ease: "easeOut", delay: (index % 3) * 0.1 }}
+          >
+            <motion.button
               type="button"
               onClick={() => setActiveCert(cert)}
-              className="group flex w-full flex-col items-center gap-4 border border-[#E4E1D8] bg-white p-6 text-center transition-colors hover:border-[#0A2647] focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#E85D25]"
+              whileHover={{ y: -4 }}
+              className="group flex w-full flex-col items-center gap-4 border border-[#E4E1D8] bg-white p-6 text-center transition-colors hover:border-[#0A2647] focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#E85D25] cursor-pointer"
             >
               <div className="relative h-40 w-full overflow-hidden bg-[#F4F3F1]">
                 <Image
@@ -35,17 +43,19 @@ export function CertificateGrid({ certificates }: { certificates: Certificate[] 
                 <FileText className="h-4 w-4" aria-hidden="true" />
                 View certificate
               </span>
-            </button>
-          </li>
+            </motion.button>
+          </motion.li>
         ))}
       </ul>
 
-      {activeCert && (
-        <CertificateModal
-          certificate={activeCert}
-          onClose={() => setActiveCert(null)}
-        />
-      )}
+      <AnimatePresence>
+        {activeCert && (
+          <CertificateModal
+            certificate={activeCert}
+            onClose={() => setActiveCert(null)}
+          />
+        )}
+      </AnimatePresence>
     </>
   );
 }

@@ -1,11 +1,17 @@
 "use client";
 
 import { useActionState } from "react";
+import { motion, AnimatePresence } from "motion/react";
 import { submitContactForm } from "./actions";
 import { contactContent } from "./contact.data";
 import type { ContactFormState } from "./contact.schema";
 
 const initialState: ContactFormState = { status: "idle" };
+
+const fieldVariants = {
+  hidden: { opacity: 0, y: 16 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.35, ease: "easeOut" as const } },
+};
 
 export function ContactForm() {
   const [state, formAction, isPending] = useActionState(
@@ -14,7 +20,14 @@ export function ContactForm() {
   );
 
   return (
-    <form action={formAction} className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+    <motion.form
+      action={formAction}
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.2 }}
+      transition={{ staggerChildren: 0.08 }}
+      className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+    >
       {/* Honeypot: kosong buat manusia, tapi sering ke-isi otomatis oleh bot */}
       <div className="hidden" aria-hidden="true">
         <label htmlFor="company">Company</label>
@@ -27,7 +40,7 @@ export function ContactForm() {
         />
       </div>
 
-      <div className="flex flex-col gap-2">
+      <motion.div variants={fieldVariants} className="flex flex-col gap-2">
         <label
           htmlFor="name"
           className="text-xs font-semibold uppercase tracking-wide text-[#2B2B2B]"
@@ -41,12 +54,22 @@ export function ContactForm() {
           required
           className="border border-[#D8D5CB] bg-white px-4 py-3 text-sm text-[#2B2B2B] focus:border-[#0A2647] focus:outline-none"
         />
-        {state.fieldErrors?.name && (
-          <p className="text-xs text-red-600">{state.fieldErrors.name}</p>
-        )}
-      </div>
+        <AnimatePresence>
+          {state.fieldErrors?.name && (
+            <motion.p
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden text-xs text-red-600"
+            >
+              {state.fieldErrors.name}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
-      <div className="flex flex-col gap-2">
+      <motion.div variants={fieldVariants} className="flex flex-col gap-2">
         <label
           htmlFor="phone"
           className="text-xs font-semibold uppercase tracking-wide text-[#2B2B2B]"
@@ -59,9 +82,9 @@ export function ContactForm() {
           type="tel"
           className="border border-[#D8D5CB] bg-white px-4 py-3 text-sm text-[#2B2B2B] focus:border-[#0A2647] focus:outline-none"
         />
-      </div>
+      </motion.div>
 
-      <div className="flex flex-col gap-2">
+      <motion.div variants={fieldVariants} className="flex flex-col gap-2">
         <label
           htmlFor="email"
           className="text-xs font-semibold uppercase tracking-wide text-[#2B2B2B]"
@@ -75,12 +98,22 @@ export function ContactForm() {
           required
           className="border border-[#D8D5CB] bg-white px-4 py-3 text-sm text-[#2B2B2B] focus:border-[#0A2647] focus:outline-none"
         />
-        {state.fieldErrors?.email && (
-          <p className="text-xs text-red-600">{state.fieldErrors.email}</p>
-        )}
-      </div>
+        <AnimatePresence>
+          {state.fieldErrors?.email && (
+            <motion.p
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden text-xs text-red-600"
+            >
+              {state.fieldErrors.email}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
-      <div className="flex flex-col gap-2">
+      <motion.div variants={fieldVariants} className="flex flex-col gap-2">
         <label
           htmlFor="clientStatus"
           className="text-xs font-semibold uppercase tracking-wide text-[#2B2B2B]"
@@ -98,9 +131,9 @@ export function ContactForm() {
             </option>
           ))}
         </select>
-      </div>
+      </motion.div>
 
-      <div className="flex flex-col gap-2 sm:col-span-2">
+      <motion.div variants={fieldVariants} className="flex flex-col gap-2 sm:col-span-2">
         <label
           htmlFor="message"
           className="text-xs font-semibold uppercase tracking-wide text-[#2B2B2B]"
@@ -114,31 +147,59 @@ export function ContactForm() {
           required
           className="resize-y border border-[#D8D5CB] bg-white px-4 py-3 text-sm text-[#2B2B2B] focus:border-[#0A2647] focus:outline-none"
         />
-        {state.fieldErrors?.message && (
-          <p className="text-xs text-red-600">{state.fieldErrors.message}</p>
-        )}
-      </div>
+        <AnimatePresence>
+          {state.fieldErrors?.message && (
+            <motion.p
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.2 }}
+              className="overflow-hidden text-xs text-red-600"
+            >
+              {state.fieldErrors.message}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </motion.div>
 
-      <div className="sm:col-span-2">
-        <button
+      <motion.div variants={fieldVariants} className="sm:col-span-2">
+        <motion.button
           type="submit"
           disabled={isPending}
+          whileHover={!isPending ? { y: -2 } : undefined}
+          whileTap={!isPending ? { scale: 0.97 } : undefined}
           className="bg-[#C7784A] px-8 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#B36A3F] disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline focus-visible:outline-offset-2 focus-visible:outline-[#0A2647]"
         >
           {isPending ? "Sending..." : contactContent.submitLabel}
-        </button>
+        </motion.button>
 
-        {state.status === "success" && (
-          <p className="mt-3 text-sm font-medium text-green-700">
-            Thanks! We received your message and will get back to you soon.
-          </p>
-        )}
-        {state.status === "error" && !state.fieldErrors && (
-          <p className="mt-3 text-sm font-medium text-red-600">
-            {state.message}
-          </p>
-        )}
-      </div>
-    </form>
+        <AnimatePresence mode="wait">
+          {state.status === "success" && (
+            <motion.p
+              key="success"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3 }}
+              className="mt-3 text-sm font-medium text-green-700"
+            >
+              Thanks! We received your message and will get back to you soon.
+            </motion.p>
+          )}
+          {state.status === "error" && !state.fieldErrors && (
+            <motion.p
+              key="error"
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.3 }}
+              className="mt-3 text-sm font-medium text-red-600"
+            >
+              {state.message}
+            </motion.p>
+          )}
+        </AnimatePresence>
+      </motion.div>
+    </motion.form>
   );
 }

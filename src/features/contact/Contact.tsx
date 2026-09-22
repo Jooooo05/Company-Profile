@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "motion/react";
 import { Container } from "@/components/ui/Container";
 import { contactContent } from "./contact.data";
 import { ContactForm } from "./ContactForm";
@@ -21,7 +24,13 @@ export function Contact() {
       <Container className="relative z-10">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-2 lg:gap-16">
           {/* Kolom kiri: info kontak */}
-          <div className="flex flex-col gap-2 border-b border-dashed border-[#C9C6BC] pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8">
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.5 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+            className="flex flex-col gap-2 border-b border-dashed border-[#C9C6BC] pb-8 lg:border-b-0 lg:border-r lg:pb-0 lg:pr-8"
+          >
             <a
               href={`mailto:${contactContent.email}`}
               className="text-sm font-medium text-[#2B2B2B] hover:text-[#0A2647]"
@@ -40,10 +49,17 @@ export function Contact() {
                 {contactContent.phoneNote}
               </span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Kolom kanan: form */}
-          <ContactForm />
+          <motion.div
+            initial={{ opacity: 0, x: 40 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.5, ease: "easeOut", delay: 0.1 }}
+          >
+            <ContactForm />
+          </motion.div>
         </div>
       </Container>
     </section>
