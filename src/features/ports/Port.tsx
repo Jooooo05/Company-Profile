@@ -6,7 +6,7 @@ export function Ports() {
   const [mapActive, setMapActive] = useState(false);
 
 return (
-    <section id="ports" className="bg-red-600">
+    <section id="ports" className="">
         <div
             className="relative h-120 w-full overflow-hidden rounded-sm border border-[#E4E1D8]"
             onMouseLeave={() => setMapActive(false)}
