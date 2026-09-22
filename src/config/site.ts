@@ -4,13 +4,15 @@ export const siteConfig = {
   tagline: "Company profile tagline here",
 } as const;
 
-// Ganti sesuai section landing page kamu yang sebenarnya
-export const navItems = [
-  { label: "About us", id: "about" },
-  { label: "Our offer", id: "offer" },
-  { label: "Team", id: "team" },
-  { label: "Certificates", id: "certificates" },
-  { label: "Ports", id: "ports" },
-  { label: "Get free quote", id: "quote" },
-  { label: "Contact", id: "contact" },
-] as const;
+export type NavItem =
+  | { type: "anchor"; label: string; id: string }
+  | { type: "page"; label: string; href: string };
+
+export const navItems: NavItem[] = [
+  { type: "anchor", label: "About us", id: "about" },
+  { type: "anchor", label: "Our offer", id: "offer" },
+  { type: "anchor", label: "Team", id: "team" },
+  { type: "anchor", label: "Contact", id: "contact" },
+  { type: "page", label: "Certificates", href: "/certificates" },
+  { type: "anchor", label: "Ports", id: "ports" },
+];

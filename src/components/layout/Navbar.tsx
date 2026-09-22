@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { navItems, siteConfig } from "@/config/site";
 import { useActiveSection } from "@/hooks/useActiveSection";
@@ -8,13 +9,28 @@ import { Container } from "@/components/ui/Container";
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const activeId = useActiveSection(navItems.map((item) => item.id));
+  const pathname = usePathname();
+
+  const anchorIds = navItems
+    .filter((item) => item.type === "anchor")
+    .map((item) => item.id);
+  const activeId = useActiveSection(anchorIds);
+
+  function getHref(item: (typeof navItems)[number]) {
+    if (item.type === "page") return item.href;
+    return pathname === "/" ? `#${item.id}` : `/#${item.id}`;
+  }
+
+  function getIsActive(item: (typeof navItems)[number]) {
+    if (item.type === "page") return pathname === item.href;
+    return pathname === "/" && item.id === activeId;
+  }
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#E4E1D8] bg-[#FAFAF8]/95 backdrop-blur">
       <Container className="flex h-20 items-center justify-between gap-6">
         {/* Logo */}
-        <Link href="#hero" className="flex shrink-0 items-center gap-3">
+        <Link href="/" className="flex shrink-0 items-center gap-3">
           <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#0A2647] text-sm font-bold text-white">
             {siteConfig.initials}
           </span>
@@ -32,11 +48,13 @@ export function Navbar() {
         <nav className="hidden items-center lg:flex" aria-label="Main navigation">
           <ul className="flex items-center">
             {navItems.map((item, index) => {
-              const isActive = item.id === activeId;
+              const isActive = getIsActive(item);
+              const href = getHref(item);
+
               return (
-                <li key={item.id} className="flex items-center">
+                <li key={item.label} className="flex items-center">
                   <a
-                    href={`#${item.id}`}
+                    href={href}
                     aria-current={isActive ? "true" : undefined}
                     className={[
                       "px-3 py-2 text-[13px] font-semibold uppercase tracking-wide transition-colors",
@@ -60,7 +78,7 @@ export function Navbar() {
           </ul>
         </nav>
 
-                {/* Mobile menu toggle */}
+        {/* Mobile menu toggle */}
         <button
           type="button"
           className="flex h-10 w-10 items-center justify-center rounded-sm border border-[#D8D5CB] lg:hidden"
@@ -93,9 +111,9 @@ export function Navbar() {
         <nav className="border-t border-[#E4E1D8] bg-[#FAFAF8] lg:hidden" aria-label="Mobile navigation">
           <ul className="flex flex-col p-4">
             {navItems.map((item) => (
-              <li key={item.id}>
+              <li key={item.label}>
                 <a
-                  href={`#${item.id}`}
+                  href={getHref(item)}
                   onClick={() => setIsOpen(false)}
                   className="block border-b border-[#E4E1D8] py-3 text-sm font-semibold uppercase tracking-wide text-[#3D4451] last:border-none"
                 >
